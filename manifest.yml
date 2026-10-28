@@ -1,0 +1,56 @@
+
+manifest_version: 2
+type: DCM_PROJECT
+default_target: DCM_DEV
+
+targets:
+  DCM_DEV:
+    account_identifier: "LXXUXFH-GH67310"
+    project_name: "DCM_DEV_DB.PROJECTS.DCM_PROJECT_DEV"
+    project_owner: "ACCOUNTADMIN"
+    templating_config: DEV
+
+  DCM_QA:
+    account_identifier: "LXXUXFH-GH67310"
+    project_name: "DCM_QA_DB.PROJECTS.DCM_PROJECT_QA"
+    project_owner: "ACCOUNTADMIN"
+    templating_config: QA
+
+  DCM_PROD:
+    account_identifier: "LXXUXFH-GH67310"
+    project_name: "DCM_PROD_DB.PROJECTS.DCM_PROJECT_PROD"
+    project_owner: "ACCOUNTADMIN"
+    templating_config: PROD
+
+templating:
+  defaults:
+    project_owner_role: "ACCOUNTADMIN"
+    wh_size: "SMALL"
+
+  configurations:
+    DEV:
+      database_name: "DCM_DEV_DB"
+      env_suffix: "_DEV"
+      wh_size: "X-SMALL"
+      teams:
+        - name: "DEV_TEAM"
+          data_retention_days: 1
+          add_employees: true
+
+    QA:
+      database_name: "DCM_QA_DB"
+      env_suffix: "_QA"
+      wh_size: "SMALL"
+      teams:
+        - name: "QA_TEAM"
+          data_retention_days: 3
+          add_employees: true
+
+    PROD:
+      database_name: "DCM_PROD_DB"
+      env_suffix: "_PROD"
+      wh_size: "MEDIUM"
+      teams:
+        - name: "PROD_TEAM"
+          data_retention_days: 7
+          add_employees: true
