@@ -16,26 +16,33 @@ jobs:
     environment: PROD
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
 
-      - uses: snowflakedb/snowflake-actions@v3
+      - name: Install Snowflake CLI
+        uses: snowflakedb/snowflake-actions@v3
         with:
           use-oidc: true
           cli-version: "3.24"
 
       - name: Configure Snowflake connection
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
         run: |
           mkdir -p ~/.snowflake
           cat > ~/.snowflake/connections.toml << EOF
           [default]
-          account = "${{ secrets.SNOWFLAKE_ACCOUNT }}"
+          account = "${SNOWFLAKE_ACCOUNT}"
+          user = "DCM_DEPLOY_USER"
           authenticator = "WORKLOAD_IDENTITY"
           role = "DCM_DEPLOY_ROLE"
           warehouse = "DCM_WH"
           EOF
           chmod 0600 ~/.snowflake/connections.toml
+
+      - name: Test Snowflake connection
+        run: snow connection test -c default
 
       - name: Plan PROD
         run: snow dcm plan --target PROD -c default
