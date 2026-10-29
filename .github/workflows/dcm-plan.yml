@@ -44,10 +44,10 @@ jobs:
         run: snow connection test -c default
 
       - name: Plan DEV
-        run: snow dcm plan --target DEV -c default
+        run: snow dcm plan --target DCM_DEV -c default
 
       - name: Deploy DEV
-        run: snow dcm deploy --target DEV -c default
+        run: snow dcm deploy --target DCM_DEV -c default
 
   deploy-qa:
     runs-on: ubuntu-latest
@@ -83,8 +83,7 @@ jobs:
         run: snow connection test -c default
 
       - name: Plan QA
-        run: snow dcm plan --target QA -c default
+        run: snow dcm plan --target DCM_QA -c default
 
       - name: Deploy QA
-        run: snow dcm deploy --target QA -c default
-
+        run: snow dcm deploy --target DCM_QA -c default
