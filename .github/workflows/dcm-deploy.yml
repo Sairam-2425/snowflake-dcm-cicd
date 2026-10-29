@@ -1,0 +1,44 @@
+
+name: DCM Deploy PROD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: PROD
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+          cli-version: "3.24"
+
+      - name: Configure Snowflake connection
+        run: |
+          mkdir -p ~/.snowflake
+          cat > ~/.snowflake/connections.toml << EOF
+          [default]
+          account = "${{ secrets.SNOWFLAKE_ACCOUNT }}"
+          authenticator = "WORKLOAD_IDENTITY"
+          role = "DCM_DEPLOY_ROLE"
+          warehouse = "DCM_WH"
+          EOF
+          chmod 0600 ~/.snowflake/connections.toml
+
+      - name: Plan PROD
+        run: snow dcm plan --target PROD -c default
+
+      - name: Deploy PROD
+        run: snow dcm deploy --target PROD -c default
