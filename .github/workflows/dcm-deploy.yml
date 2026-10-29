@@ -44,8 +44,11 @@ jobs:
       - name: Test Snowflake connection
         run: snow connection test -c default
 
+      
+
+
       - name: Plan PROD
-        run: snow dcm plan --target PROD -c default
+        run: snow dcm plan --target DCM_PROD -c default
 
       - name: Deploy PROD
-        run: snow dcm deploy --target PROD -c default
+        run: snow dcm deploy --target DCM_PROD -c default
